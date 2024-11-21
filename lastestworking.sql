@@ -1,261 +1,282 @@
--- MySQL Workbench Forward Engineering
+-- MySQL dump 10.13  Distrib 8.0.38, for Win64 (x86_64)
+--
+-- Host: localhost    Database: mydb
+-- ------------------------------------------------------
+-- Server version	8.0.39
 
-SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
-SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
-SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!50503 SET NAMES utf8 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
--- -----------------------------------------------------
--- Schema default_schema
--- -----------------------------------------------------
--- -----------------------------------------------------
--- Schema mydb
--- -----------------------------------------------------
-DROP SCHEMA IF EXISTS `mydb` ;
+--
+-- Table structure for table `athlete-team`
+--
 
--- -----------------------------------------------------
--- Schema mydb
--- -----------------------------------------------------
-CREATE SCHEMA IF NOT EXISTS `mydb` DEFAULT CHARACTER SET utf8mb3 ;
-USE `mydb` ;
+DROP TABLE IF EXISTS `athlete-team`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `athlete-team` (
+  `athleteID` varchar(45) NOT NULL,
+  `teamID` varchar(45) NOT NULL,
+  PRIMARY KEY (`athleteID`,`teamID`),
+  KEY `FK4_idx` (`teamID`),
+  CONSTRAINT `FK1` FOREIGN KEY (`athleteID`) REFERENCES `athletes` (`athleteID`),
+  CONSTRAINT `FK4` FOREIGN KEY (`teamID`) REFERENCES `teams` (`teamID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
--- -----------------------------------------------------
--- Table `mydb`.`athlete`
--- -----------------------------------------------------
-DROP TABLE IF EXISTS `mydb`.`athlete` ;
+--
+-- Dumping data for table `athlete-team`
+--
 
-CREATE TABLE IF NOT EXISTS `mydb`.`athlete` (
-  `athleteID` VARCHAR(45) NOT NULL,
-  `firstname` VARCHAR(45) NOT NULL,
-  `lastname` VARCHAR(45) NOT NULL,
-  `middleInitial` CHAR(1) NULL DEFAULT NULL,
-  `age` INT NOT NULL,
-  `gender` ENUM('Male', 'Female') NULL DEFAULT NULL,
+LOCK TABLES `athlete-team` WRITE;
+/*!40000 ALTER TABLE `athlete-team` DISABLE KEYS */;
+/*!40000 ALTER TABLE `athlete-team` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `athletes`
+--
+
+DROP TABLE IF EXISTS `athletes`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `athletes` (
+  `athleteID` varchar(45) NOT NULL,
+  `firstname` varchar(45) NOT NULL,
+  `lastname` varchar(45) NOT NULL,
+  `middleInitial` char(1) DEFAULT NULL,
+  `birthday` date NOT NULL,
+  `gender` enum('M','F') DEFAULT NULL,
   PRIMARY KEY (`athleteID`),
-  UNIQUE INDEX `athleteID_UNIQUE` (`athleteID` ASC) VISIBLE)
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8mb3;
+  UNIQUE KEY `athleteID_UNIQUE` (`athleteID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
+--
+-- Dumping data for table `athletes`
+--
 
--- -----------------------------------------------------
--- Table `mydb`.`teams`
--- -----------------------------------------------------
-DROP TABLE IF EXISTS `mydb`.`teams` ;
+LOCK TABLES `athletes` WRITE;
+/*!40000 ALTER TABLE `athletes` DISABLE KEYS */;
+/*!40000 ALTER TABLE `athletes` ENABLE KEYS */;
+UNLOCK TABLES;
 
-CREATE TABLE IF NOT EXISTS `mydb`.`teams` (
-  `teamID` VARCHAR(45) NOT NULL,
-  `teamName` VARCHAR(45) NOT NULL,
-  `sport` VARCHAR(45) NOT NULL,
-  PRIMARY KEY (`teamID`),
-  UNIQUE INDEX `teamID_UNIQUE` (`teamID` ASC) VISIBLE,
-  UNIQUE INDEX `teamName_UNIQUE` (`teamName` ASC) VISIBLE,
-  UNIQUE INDEX `sport_UNIQUE` (`sport` ASC) VISIBLE)
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8mb3;
+--
+-- Table structure for table `borrowrecords`
+--
 
-
--- -----------------------------------------------------
--- Table `mydb`.`athlete-team`
--- -----------------------------------------------------
-DROP TABLE IF EXISTS `mydb`.`athlete-team` ;
-
-CREATE TABLE IF NOT EXISTS `mydb`.`athlete-team` (
-  `athleteID` VARCHAR(45) NOT NULL,
-  `teamID` VARCHAR(45) NOT NULL,
-  PRIMARY KEY (`athleteID`, `teamID`),
-  INDEX `FK4_idx` (`teamID` ASC) VISIBLE,
-  CONSTRAINT `FK1`
-    FOREIGN KEY (`athleteID`)
-    REFERENCES `mydb`.`athlete` (`athleteID`),
-  CONSTRAINT `FK4`
-    FOREIGN KEY (`teamID`)
-    REFERENCES `mydb`.`teams` (`teamID`))
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8mb3;
-
-
--- -----------------------------------------------------
--- Table `mydb`.`resources`
--- -----------------------------------------------------
-DROP TABLE IF EXISTS `mydb`.`resources` ;
-
-CREATE TABLE IF NOT EXISTS `mydb`.`resources` (
-  `resourceID` VARCHAR(45) NOT NULL,
-  `name` VARCHAR(45) NOT NULL,
-  `status` ENUM('Damaged', 'Borrowed', 'Returned') NOT NULL,
-  PRIMARY KEY (`resourceID`),
-  UNIQUE INDEX `resourceID_UNIQUE` (`resourceID` ASC) VISIBLE,
-  UNIQUE INDEX `name_UNIQUE` (`name` ASC) VISIBLE)
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8mb3;
-
-
--- -----------------------------------------------------
--- Table `mydb`.`coach`
--- -----------------------------------------------------
-DROP TABLE IF EXISTS `mydb`.`coach` ;
-
-CREATE TABLE IF NOT EXISTS `mydb`.`coach` (
-  `coachID` VARCHAR(45) NOT NULL,
-  `firstname` VARCHAR(45) NOT NULL,
-  `lastname` VARCHAR(45) NOT NULL,
-  `middleInitial` CHAR(1) NULL DEFAULT NULL,
-  `age` INT NOT NULL,
-  `gender` ENUM('Male', 'Female') NOT NULL,
-  `hireDATE` DATE NOT NULL,
-  PRIMARY KEY (`coachID`),
-  UNIQUE INDEX `coachID_UNIQUE` (`coachID` ASC) VISIBLE)
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8mb3;
-
-
--- -----------------------------------------------------
--- Table `mydb`.`borrowrecord`
--- -----------------------------------------------------
-DROP TABLE IF EXISTS `mydb`.`borrowrecord` ;
-
-CREATE TABLE IF NOT EXISTS `mydb`.`borrowrecord` (
-  `borrowID` VARCHAR(45) NOT NULL,
-  `resourceID` VARCHAR(45) NOT NULL,
-  `BorrowDate` DATE NOT NULL,
-  `ReturnDate` DATE NOT NULL,
-  `coachID` VARCHAR(45) NOT NULL,
+DROP TABLE IF EXISTS `borrowrecords`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `borrowrecords` (
+  `borrowID` varchar(45) NOT NULL,
+  `resourceID` varchar(45) NOT NULL,
+  `BorrowDate` date NOT NULL,
+  `ReturnDate` date NOT NULL,
+  `coachID` varchar(45) NOT NULL,
   PRIMARY KEY (`borrowID`),
-  UNIQUE INDEX `borrowID_UNIQUE` (`borrowID` ASC) VISIBLE,
-  INDEX `FK21_idx` (`resourceID` ASC) VISIBLE,
-  INDEX `FK22_idx` (`coachID` ASC) VISIBLE,
-  CONSTRAINT `FK21`
-    FOREIGN KEY (`resourceID`)
-    REFERENCES `mydb`.`resources` (`resourceID`),
-  CONSTRAINT `FK22`
-    FOREIGN KEY (`coachID`)
-    REFERENCES `mydb`.`coach` (`coachID`))
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8mb3;
+  UNIQUE KEY `borrowID_UNIQUE` (`borrowID`),
+  KEY `FK21_idx` (`resourceID`),
+  KEY `FK22_idx` (`coachID`),
+  CONSTRAINT `FK21` FOREIGN KEY (`resourceID`) REFERENCES `resources` (`resourceID`),
+  CONSTRAINT `FK22` FOREIGN KEY (`coachID`) REFERENCES `coaches` (`coachID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
+--
+-- Dumping data for table `borrowrecords`
+--
 
--- -----------------------------------------------------
--- Table `mydb`.`coach_job_history`
--- -----------------------------------------------------
-DROP TABLE IF EXISTS `mydb`.`coach_job_history` ;
+LOCK TABLES `borrowrecords` WRITE;
+/*!40000 ALTER TABLE `borrowrecords` DISABLE KEYS */;
+/*!40000 ALTER TABLE `borrowrecords` ENABLE KEYS */;
+UNLOCK TABLES;
 
-CREATE TABLE IF NOT EXISTS `mydb`.`coach_job_history` (
-  `coachID` VARCHAR(45) NOT NULL,
-  `startDate` DATE NOT NULL,
-  `endDate` DATE NOT NULL,
-  `teamID` VARCHAR(45) NOT NULL,
-  `role` ENUM('Head Coach', 'Assistant Coach') NOT NULL,
-  PRIMARY KEY (`coachID`, `startDate`),
-  UNIQUE INDEX `coachID_UNIQUE` (`coachID` ASC) VISIBLE,
-  INDEX `FK2_idx` (`teamID` ASC) VISIBLE,
-  CONSTRAINT `FK2`
-    FOREIGN KEY (`teamID`)
-    REFERENCES `mydb`.`teams` (`teamID`),
-  CONSTRAINT `FK3`
-    FOREIGN KEY (`coachID`)
-    REFERENCES `mydb`.`coach` (`coachID`))
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8mb3;
+--
+-- Table structure for table `coach_job_history`
+--
 
+DROP TABLE IF EXISTS `coach_job_history`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `coach_job_history` (
+  `coachID` varchar(45) NOT NULL,
+  `startDate` date NOT NULL,
+  `endDate` date NOT NULL,
+  `teamID` varchar(45) NOT NULL,
+  `role` enum('Head Coach','Assistant Coach') NOT NULL,
+  PRIMARY KEY (`coachID`,`startDate`),
+  UNIQUE KEY `coachID_UNIQUE` (`coachID`),
+  KEY `FK2_idx` (`teamID`),
+  CONSTRAINT `FK2` FOREIGN KEY (`teamID`) REFERENCES `teams` (`teamID`),
+  CONSTRAINT `FK3` FOREIGN KEY (`coachID`) REFERENCES `coaches` (`coachID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
--- -----------------------------------------------------
--- Table `mydb`.`venues`
--- -----------------------------------------------------
-DROP TABLE IF EXISTS `mydb`.`venues` ;
+--
+-- Dumping data for table `coach_job_history`
+--
 
-CREATE TABLE IF NOT EXISTS `mydb`.`venues` (
-  `venueID` VARCHAR(45) NOT NULL,
-  `venueName` VARCHAR(45) NOT NULL,
-  `location` VARCHAR(45) NOT NULL,
-  PRIMARY KEY (`venueID`),
-  UNIQUE INDEX `venueID_UNIQUE` (`venueID` ASC) VISIBLE,
-  UNIQUE INDEX `venueName_UNIQUE` (`venueName` ASC) VISIBLE)
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8mb3;
+LOCK TABLES `coach_job_history` WRITE;
+/*!40000 ALTER TABLE `coach_job_history` DISABLE KEYS */;
+/*!40000 ALTER TABLE `coach_job_history` ENABLE KEYS */;
+UNLOCK TABLES;
 
+--
+-- Table structure for table `coaches`
+--
 
--- -----------------------------------------------------
--- Table `mydb`.`venuereservation`
--- -----------------------------------------------------
-DROP TABLE IF EXISTS `mydb`.`venuereservation` ;
+DROP TABLE IF EXISTS `coaches`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `coaches` (
+  `coachID` varchar(45) NOT NULL,
+  `firstname` varchar(45) NOT NULL,
+  `lastname` varchar(45) NOT NULL,
+  `middleInitial` char(1) DEFAULT NULL,
+  `birthday` date NOT NULL,
+  `gender` enum('M','F') NOT NULL,
+  `status` enum('active','inactive','suspended') NOT NULL,
+  PRIMARY KEY (`coachID`),
+  UNIQUE KEY `coachID_UNIQUE` (`coachID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
-CREATE TABLE IF NOT EXISTS `mydb`.`venuereservation` (
-  `reserveID` VARCHAR(45) NOT NULL,
-  `date` DATE NOT NULL,
-  `venueID` VARCHAR(45) NOT NULL,
-  `startTime` INT NOT NULL,
-  `endTime` INT NOT NULL,
-  `coachID` VARCHAR(45) NOT NULL,
+--
+-- Dumping data for table `coaches`
+--
+
+LOCK TABLES `coaches` WRITE;
+/*!40000 ALTER TABLE `coaches` DISABLE KEYS */;
+/*!40000 ALTER TABLE `coaches` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `resources`
+--
+
+DROP TABLE IF EXISTS `resources`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `resources` (
+  `resourceID` varchar(45) NOT NULL,
+  `name` varchar(45) NOT NULL,
+  `status` enum('Damaged','Borrowed','Returned') NOT NULL,
+  PRIMARY KEY (`resourceID`),
+  UNIQUE KEY `resourceID_UNIQUE` (`resourceID`),
+  UNIQUE KEY `name_UNIQUE` (`name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `resources`
+--
+
+LOCK TABLES `resources` WRITE;
+/*!40000 ALTER TABLE `resources` DISABLE KEYS */;
+/*!40000 ALTER TABLE `resources` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `teams`
+--
+
+DROP TABLE IF EXISTS `teams`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `teams` (
+  `teamID` varchar(45) NOT NULL,
+  `teamName` varchar(45) NOT NULL,
+  `sport` varchar(45) NOT NULL,
+  PRIMARY KEY (`teamID`),
+  UNIQUE KEY `teamID_UNIQUE` (`teamID`),
+  UNIQUE KEY `teamName_UNIQUE` (`teamName`),
+  UNIQUE KEY `sport_UNIQUE` (`sport`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `teams`
+--
+
+LOCK TABLES `teams` WRITE;
+/*!40000 ALTER TABLE `teams` DISABLE KEYS */;
+/*!40000 ALTER TABLE `teams` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `venuereservation`
+--
+
+DROP TABLE IF EXISTS `venuereservation`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `venuereservation` (
+  `reserveID` varchar(45) NOT NULL,
+  `date` date NOT NULL,
+  `venueID` varchar(45) NOT NULL,
+  `startTime` int NOT NULL,
+  `endTime` int NOT NULL,
+  `coachID` varchar(45) NOT NULL,
   PRIMARY KEY (`reserveID`),
-  UNIQUE INDEX `reserveID_UNIQUE` (`reserveID` ASC) VISIBLE,
-  INDEX `FKV_idx` (`venueID` ASC) VISIBLE,
-  INDEX `FKC_idx` (`coachID` ASC) VISIBLE,
-  CONSTRAINT `FKC`
-    FOREIGN KEY (`coachID`)
-    REFERENCES `mydb`.`coach` (`coachID`),
-  CONSTRAINT `FKV`
-    FOREIGN KEY (`venueID`)
-    REFERENCES `mydb`.`venues` (`venueID`))
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8mb3;
+  UNIQUE KEY `reserveID_UNIQUE` (`reserveID`),
+  KEY `FKV_idx` (`venueID`),
+  KEY `FKC_idx` (`coachID`),
+  CONSTRAINT `FKC` FOREIGN KEY (`coachID`) REFERENCES `coaches` (`coachID`),
+  CONSTRAINT `FKV` FOREIGN KEY (`venueID`) REFERENCES `venues` (`venueID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
-USE `mydb`;
+--
+-- Dumping data for table `venuereservation`
+--
 
-DELIMITER $$
+LOCK TABLES `venuereservation` WRITE;
+/*!40000 ALTER TABLE `venuereservation` DISABLE KEYS */;
+/*!40000 ALTER TABLE `venuereservation` ENABLE KEYS */;
+UNLOCK TABLES;
 
-USE `mydb`$$
-DROP TRIGGER IF EXISTS `mydb`.`venuereservation_BEFORE_UPDATE` $$
-USE `mydb`$$
-CREATE
-DEFINER=`root`@`localhost`
-TRIGGER `mydb`.`venuereservation_BEFORE_UPDATE`
-BEFORE UPDATE ON `mydb`.`venuereservation`
-FOR EACH ROW
-BEGIN
-DECLARE overlap_count INT;
+--
+-- Table structure for table `venues`
+--
 
-    -- Check for overlapping reservations
-    SELECT COUNT(*) INTO overlap_count
-    FROM VenueReservation
-    WHERE VenueID = NEW.VenueID
-      AND Date = NEW.Date
-      AND (
-          (NEW.startTime < endTime AND NEW.endTime > startTime)
-      );
+DROP TABLE IF EXISTS `venues`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `venues` (
+  `venueID` varchar(45) NOT NULL,
+  `venueName` varchar(45) NOT NULL,
+  `location` varchar(45) NOT NULL,
+  PRIMARY KEY (`venueID`),
+  UNIQUE KEY `venueID_UNIQUE` (`venueID`),
+  UNIQUE KEY `venueName_UNIQUE` (`venueName`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
-    -- If overlap_count > 0, raise an error
-    IF overlap_count > 0 THEN
-        SIGNAL SQLSTATE '45000'
-        SET MESSAGE_TEXT = 'Error: Overlapping reservation detected.';
-    END IF;
-END$$
+--
+-- Dumping data for table `venues`
+--
 
+LOCK TABLES `venues` WRITE;
+/*!40000 ALTER TABLE `venues` DISABLE KEYS */;
+/*!40000 ALTER TABLE `venues` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
-USE `mydb`$$
-DROP TRIGGER IF EXISTS `mydb`.`venuereservation_BEFORE_INSERT` $$
-USE `mydb`$$
-CREATE DEFINER = CURRENT_USER TRIGGER `mydb`.`venuereservation_BEFORE_INSERT` BEFORE INSERT ON `venuereservation` FOR EACH ROW
-BEGIN
-DECLARE overlap_count INT;
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
-    -- Check for overlapping reservations
-    SELECT COUNT(*) INTO overlap_count
-    FROM VenueReservation
-    WHERE VenueID = NEW.VenueID
-      AND Date = NEW.Date
-      AND (
-          (NEW.startTime < endTime AND NEW.endTime > startTime)
-      );
-
-    -- If overlap_count > 0, raise an error
-    IF overlap_count > 0 THEN
-        SIGNAL SQLSTATE '45000'
-        SET MESSAGE_TEXT = 'Error: Overlapping reservation detected.';
-    END IF;
-END$$
-
-
-DELIMITER ;
-
-SET SQL_MODE=@OLD_SQL_MODE;
-SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
-SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+-- Dump completed on 2024-11-21 21:07:56
