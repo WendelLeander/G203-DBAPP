@@ -3,82 +3,119 @@ import java.util.Scanner;
 
 public class athlete_management_menu {
 
-    public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        athlete_management am = new athlete_management();
+    public athlete_management_menu() {
+    }
 
-        while (true) {
-            System.out.println("\n------ Athlete Management Menu ------");
-            System.out.println("1. Add New Athlete");
-            System.out.println("2. Update Athlete Details");
-            System.out.println("3. Delete Athlete");
-            System.out.println("4. View Athlete Details");
-            System.out.println("5. Track Athlete's Performance History");
-            System.out.println("6. Exit");
-            System.out.print("Choose an option: ");
+    public int menu() {
+        int menuselection = 0;
+        Scanner console = new Scanner(System.in);
 
-            int choice = scanner.nextInt();
-            scanner.nextLine();
+        System.out.println("  ");
+        System.out.println("  ");
+        System.out.println("=======================================================");
+        System.out.println("    Athlete Management Menu                           ");
+        System.out.println("-------------------------------------------------------");
+        System.out.println("[1] Create a new Athlete Record                      ");
+        System.out.println("[2] Update an Athlete Record                         ");
+        System.out.println("[3] Delete an Athlete Record                         ");
+        System.out.println("[4] View an Athlete Record and Current Team          ");
+        System.out.println("[5] View Performance History of an Athlete           ");
+        System.out.println("[0] Exit Athlete Management                          ");
+        System.out.println("=======================================================");
 
-            switch (choice) {
-                case 1:
-                    System.out.println("Enter Athlete ID: ");
-                    am.athleteId = scanner.nextLine();
-                    System.out.println("Enter First Name: ");
-                    am.firstName = scanner.nextLine();
-                    System.out.println("Enter Last Name: ");
-                    am.lastName = scanner.nextLine();
-                    System.out.println("Enter Age: ");
-                    am.age = scanner.nextInt();
-                    System.out.println("Enter Gender (M/F): ");
-                    am.gender = scanner.next().charAt(0);
-                    scanner.nextLine();  
-                    am.add_athlete();
-                    break;
+        System.out.println("Enter Selected Function: ");
+        menuselection = Integer.parseInt(console.nextLine());
 
-                case 2:
-                    System.out.println("Enter Athlete ID to update: ");
-                    am.athleteId = scanner.nextLine();
-                    System.out.println("Enter new First Name: ");
-                    am.firstName = scanner.nextLine();
-                    System.out.println("Enter new Last Name: ");
-                    am.lastName = scanner.nextLine();
-                    System.out.println("Enter new Age: ");
-                    am.age = scanner.nextInt();
-                    System.out.println("Enter new Gender (M/F): ");
-                    am.gender = scanner.next().charAt(0);
-                    scanner.nextLine();  // Consume newline
-                    am.update_athlete();
-                    break;
+        if (menuselection == 1) {
+            athlete_management a = new athlete_management();
 
-                case 3:
-                    System.out.println("Enter Athlete ID to delete: ");
-                    am.athleteId = scanner.nextLine();
-                    am.delete_athlete();
-                    break;
+            System.out.println("Enter athlete profile");
+            System.out.println("-------------------------------------------------------------------");
+            System.out.println("Athlete ID         : ");
+            a.athleteId = console.nextLine();
+            System.out.println("First Name         : ");
+            a.firstName = console.nextLine();
+            System.out.println("Last Name          : ");
+            a.lastName = console.nextLine();
+            System.out.println("Age                : ");
+            a.age = Integer.parseInt(console.nextLine());
+            System.out.println("Gender             : ");
+            a.gender = console.nextLine().charAt(0);
 
-                case 4:
-                    System.out.println("Enter Athlete ID to view: ");
-                    am.athleteId = scanner.nextLine();
-                    am.view_athlete();
-                    break;
+            a.add_athlete();
 
-                case 5:
-                    System.out.println("Enter Athlete ID to track performance: ");
-                    am.athleteId = scanner.nextLine();
-                    am.track_performance_history();
-                    break;
+        } else if (menuselection == 2) {
+            athlete_management a = new athlete_management();
 
-                case 6:
-                    System.out.println("Exiting program...");
-                    scanner.close();
-                    System.exit(0);
-                    break;
+            System.out.println("Enter athlete profile");
+            System.out.println("Athlete ID         : ");
+            a.athleteId = console.nextLine();
 
-                default:
-                    System.out.println("Invalid choice. Please try again.");
+            if (a.view_athlete() == 0) {
+                System.out.println("Athlete does not exist in the records");
+            } else {
+                System.out.println("Current Athlete profile");
+                System.out.println("-------------------------------------------------------------------");
+                System.out.println("Athlete ID         : " + a.athleteId);
+                System.out.println("First Name         : " + a.firstName);
+                System.out.println("Last Name          : " + a.lastName);
+                System.out.println("Age                : " + a.age);
+                System.out.println("Gender             : " + a.gender);
+
+                System.out.println("\nEnter updated athlete profile");
+                System.out.println("-------------------------------------------------------------------");
+                System.out.println("First Name         : ");
+                a.firstName = console.nextLine();
+                System.out.println("Last Name          : ");
+                a.lastName = console.nextLine();
+                System.out.println("Age                : ");
+                a.age = Integer.parseInt(console.nextLine());
+                System.out.println("Gender             : ");
+                a.gender = console.nextLine().charAt(0);
+
+                a.update_athlete();
             }
+        } else if (menuselection == 3) {
+            athlete_management a = new athlete_management();
+
+            System.out.println("Enter athlete profile");
+            System.out.println("Athlete ID         : ");
+            a.athleteId = console.nextLine();
+
+            a.delete_athlete();
+
+        } else if (menuselection == 4) {
+            athlete_management a = new athlete_management();
+
+            System.out.println("Enter athlete profile");
+            System.out.println("Athlete ID         : ");
+            a.athleteId = console.nextLine();
+
+            if (a.view_athlete() == 0) {
+                System.out.println("Athlete does not exist in the records");
+            } else {
+                System.out.println("Athlete Record and Team Retrieved");
+            }
+
+        } else if (menuselection == 5) {
+            athlete_management a = new athlete_management();
+
+            System.out.println("Enter athlete profile");
+            System.out.println("Athlete ID         : ");
+            a.athleteId = console.nextLine();
+
+            if (a.track_performance_history() == 0) {
+                System.out.println("No performance history found for the athlete");
+            }
+        }
+
+        return menuselection;
+    }
+
+    public static void main(String args[]) {
+
+        athlete_management_menu amm = new athlete_management_menu();
+        while (amm.menu() != 0) {
         }
     }
 }
-
