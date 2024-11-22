@@ -37,8 +37,8 @@ public class athlete_management_menu {
             a.firstName = console.nextLine();
             System.out.println("Last Name          : ");
             a.lastName = console.nextLine();
-            System.out.println("Age                : ");
-            a.age = Integer.parseInt(console.nextLine());
+            System.out.println("Birthday (YYYY-MM-DD) : ");
+            a.birthday = console.nextLine();
             System.out.println("Gender             : ");
             a.gender = console.nextLine().charAt(0);
 
@@ -59,7 +59,7 @@ public class athlete_management_menu {
                 System.out.println("Athlete ID         : " + a.athleteId);
                 System.out.println("First Name         : " + a.firstName);
                 System.out.println("Last Name          : " + a.lastName);
-                System.out.println("Age                : " + a.age);
+                System.out.println("Birthday           : " + a.birthday);
                 System.out.println("Gender             : " + a.gender);
 
                 System.out.println("\nEnter updated athlete profile");
@@ -68,8 +68,8 @@ public class athlete_management_menu {
                 a.firstName = console.nextLine();
                 System.out.println("Last Name          : ");
                 a.lastName = console.nextLine();
-                System.out.println("Age                : ");
-                a.age = Integer.parseInt(console.nextLine());
+                System.out.println("Birthday (YYYY-MM-DD): ");
+                a.birthday = console.nextLine();
                 System.out.println("Gender             : ");
                 a.gender = console.nextLine().charAt(0);
 
