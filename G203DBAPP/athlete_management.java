@@ -6,7 +6,7 @@ public class athlete_management {
     public String athleteId;
     public String firstName;
     public String lastName;
-    public int age;
+    public String birthday;
     public char gender;
     public String teamName;
 
@@ -14,7 +14,7 @@ public class athlete_management {
         athleteId = "";
         firstName = "";
         lastName = "";
-        age = 0;
+        birthday = ""; 
         gender = ' ';
         teamName = "";
     }
@@ -22,11 +22,11 @@ public class athlete_management {
     public int add_athlete() {
         try {
             Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/dbathletes?useTimezone=true&serverTimezone=UTC&user=root&password=p@ssword");
-            PreparedStatement pstmt = conn.prepareStatement("INSERT INTO athletes (athleteID, firstName, lastName, age, gender) VALUES (?, ?, ?, ?, ?)");
+            PreparedStatement pstmt = conn.prepareStatement("INSERT INTO athletes (athleteID, firstName, lastName, birthday, gender) VALUES (?, ?, ?, ?, ?)");
             pstmt.setString(1, athleteId);
             pstmt.setString(2, firstName);
             pstmt.setString(3, lastName);
-            pstmt.setInt(4, age);
+            pstmt.setString(4, birthday); // Changed age to birthday
             pstmt.setString(5, String.valueOf(gender));
             pstmt.executeUpdate();
             System.out.println("Athlete record was created");
@@ -42,10 +42,10 @@ public class athlete_management {
     public int update_athlete() {
         try {
             Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/dbathletes?useTimezone=true&serverTimezone=UTC&user=root&password=p@ssword");
-            PreparedStatement pstmt = conn.prepareStatement("UPDATE athletes SET firstName=?, lastName=?, age=?, gender=? WHERE athleteID=?");
+            PreparedStatement pstmt = conn.prepareStatement("UPDATE athletes SET firstName=?, lastName=?, birthday=?, gender=? WHERE athleteID=?");
             pstmt.setString(1, firstName);
             pstmt.setString(2, lastName);
-            pstmt.setInt(3, age);
+            pstmt.setString(3, birthday); 
             pstmt.setString(4, String.valueOf(gender));
             pstmt.setString(5, athleteId);
             pstmt.executeUpdate();
@@ -85,13 +85,13 @@ public class athlete_management {
             while (rs.next()) {
                 firstName = rs.getString("firstName");
                 lastName = rs.getString("lastName");
-                age = rs.getInt("age");
+                birthday = rs.getString("birthday"); 
                 gender = rs.getString("gender").charAt(0);
 
                 System.out.println("Athlete Information:");
                 System.out.println("ID: " + athleteId);
                 System.out.println("Name: " + firstName + " " + lastName);
-                System.out.println("Age: " + age);
+                System.out.println("Birthday: " + birthday); 
                 System.out.println("Gender: " + gender);
 
                 // Fetching the current team of the athlete
