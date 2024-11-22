@@ -15,7 +15,7 @@ public class athlete_management {
     // Performance fields
     public String performanceID;
     public String date;
-    public int score;  // Changed score to integer
+    public int score;
 
     public athlete_management() {
         athleteID = "";
@@ -28,14 +28,14 @@ public class athlete_management {
         role = "";
         performanceID = "";
         date = "";
-        score = 0;  // Default score set to 0
+        score = 0;
     }
 
     // Add a new athlete along with team data
     public int add_athlete() {
         try (Connection conn = DriverManager.getConnection(
-            "jdbc:mysql://localhost:3306/mydb?useTimezone=true&serverTimezone=UTC",  // Changed to mydb
-            "user", "password")) {
+            "jdbc:mysql://localhost:3306/mydb?useTimezone=true&serverTimezone=UTC", 
+            "root", "your_password")) {
 
             // Insert athlete data
             PreparedStatement pstmt = conn.prepareStatement(
@@ -68,8 +68,19 @@ public class athlete_management {
     // Update existing athlete and team data with conditional updates
     public int update_athlete() {
         try (Connection conn = DriverManager.getConnection(
-            "jdbc:mysql://localhost:3306/mydb?useTimezone=true&serverTimezone=UTC",  // Changed to mydb
-            "user", "password")) {
+            "jdbc:mysql://localhost:3306/mydb?useTimezone=true&serverTimezone=UTC", 
+            "root", "your_password")) {
+
+            // Check if athlete exists
+            PreparedStatement checkStmt = conn.prepareStatement(
+                "SELECT * FROM athletes WHERE athleteID=?"
+            );
+            checkStmt.setString(1, athleteID);
+            ResultSet rs = checkStmt.executeQuery();
+            if (!rs.next()) {
+                System.out.println("Athlete with ID " + athleteID + " does not exist.");
+                return 0;
+            }
 
             // Update athlete data conditionally
             StringBuilder updateQuery = new StringBuilder("UPDATE athletes SET ");
@@ -94,15 +105,12 @@ public class athlete_management {
                 updateQuery.append("gender=?, ");
                 first = false;
             }
-            if (!first) { 
+            if (!first) {
                 updateQuery.deleteCharAt(updateQuery.length() - 2); // Remove last comma
             }
             updateQuery.append("WHERE athleteID=?");
 
-            // Prepare the statement
             PreparedStatement pstmt = conn.prepareStatement(updateQuery.toString());
-
-            // Set the parameters for the query
             int index = 1;
             if (!firstName.isEmpty()) {
                 pstmt.setString(index++, firstName);
@@ -119,9 +127,7 @@ public class athlete_management {
             if (!gender.isEmpty()) {
                 pstmt.setString(index++, gender);
             }
-            pstmt.setString(index, athleteID); // Set athleteID at the end
-
-            // Execute the update query
+            pstmt.setString(index, athleteID);
             pstmt.executeUpdate();
 
             // Update athlete-team relation conditionally
@@ -135,15 +141,12 @@ public class athlete_management {
                 updateTeamQuery.append("role=?, ");
                 teamFirst = false;
             }
-            if (!teamFirst) { 
+            if (!teamFirst) {
                 updateTeamQuery.deleteCharAt(updateTeamQuery.length() - 2); // Remove last comma
             }
             updateTeamQuery.append("WHERE athleteID=?");
 
-            // Prepare the statement
             pstmt = conn.prepareStatement(updateTeamQuery.toString());
-
-            // Set the parameters for the query
             int teamIndex = 1;
             if (!teamID.isEmpty()) {
                 pstmt.setString(teamIndex++, teamID);
@@ -151,9 +154,7 @@ public class athlete_management {
             if (!role.isEmpty()) {
                 pstmt.setString(teamIndex++, role);
             }
-            pstmt.setString(teamIndex, athleteID); // Set athleteID at the end
-
-            // Execute the update query
+            pstmt.setString(teamIndex, athleteID);
             pstmt.executeUpdate();
 
             return 1;
@@ -166,8 +167,19 @@ public class athlete_management {
     // Delete athlete and their associated team data
     public int delete_athlete() {
         try (Connection conn = DriverManager.getConnection(
-            "jdbc:mysql://localhost:3306/mydb?useTimezone=true&serverTimezone=UTC",  // Changed to mydb
-            "user", "password")) {
+            "jdbc:mysql://localhost:3306/mydb?useTimezone=true&serverTimezone=UTC", 
+            "root", "your_password")) {
+
+            // Check if athlete exists
+            PreparedStatement checkStmt = conn.prepareStatement(
+                "SELECT * FROM athletes WHERE athleteID=?"
+            );
+            checkStmt.setString(1, athleteID);
+            ResultSet rs = checkStmt.executeQuery();
+            if (!rs.next()) {
+                System.out.println("Athlete with ID " + athleteID + " does not exist.");
+                return 0;
+            }
 
             // Delete from athlete-team table
             PreparedStatement pstmt = conn.prepareStatement(
@@ -189,10 +201,10 @@ public class athlete_management {
     }
 
     // View an athlete's details along with their team and performance data
-    public void view_athlete() {
+    public int view_athlete() {
         try (Connection conn = DriverManager.getConnection(
-            "jdbc:mysql://localhost:3306/mydb?useTimezone=true&serverTimezone=UTC",  // Changed to mydb
-            "user", "password")) {
+            "jdbc:mysql://localhost:3306/mydb?useTimezone=true&serverTimezone=UTC", 
+            "root", "your_password")) {
 
             // Select athlete data along with team role
             PreparedStatement pstmt = conn.prepareStatement(
@@ -201,36 +213,42 @@ public class athlete_management {
             pstmt.setString(1, athleteID);
             ResultSet rs = pstmt.executeQuery();
 
-            while (rs.next()) {
+            if (rs.next()) {
                 System.out.println("Athlete ID: " + rs.getString("athleteID"));
                 System.out.println("Name: " + rs.getString("firstName") + " " + rs.getString("lastName"));
                 System.out.println("Team ID: " + rs.getString("teamID"));
                 System.out.println("Role: " + rs.getString("role"));
-            }
 
-            // Fetch performance data for the athlete
-            pstmt = conn.prepareStatement(
-                "SELECT performanceID, date, score FROM performance WHERE athleteID=?"
-            );
-            pstmt.setString(1, athleteID);
-            rs = pstmt.executeQuery();
+                // Fetch performance data for the athlete
+                pstmt = conn.prepareStatement(
+                    "SELECT performanceID, date, score FROM performance WHERE athleteID=?"
+                );
+                pstmt.setString(1, athleteID);
+                rs = pstmt.executeQuery();
 
-            while (rs.next()) {
-                System.out.println("Performance ID: " + rs.getString("performanceID"));
-                System.out.println("Date: " + rs.getString("date"));
-                System.out.println("Score: " + rs.getInt("score"));  // Changed to int
+                while (rs.next()) {
+                    System.out.println("Performance ID: " + rs.getString("performanceID"));
+                    System.out.println("Date: " + rs.getString("date"));
+                    System.out.println("Score: " + rs.getInt("score"));
+                }
+
+                return 1;
+            } else {
+                System.out.println("Athlete with ID " + athleteID + " not found.");
+                return 0;
             }
 
         } catch (Exception e) {
             System.out.println(e.getMessage());
+            return 0;
         }
     }
 
     // Add performance for an athlete
     public int add_performance() {
         try (Connection conn = DriverManager.getConnection(
-            "jdbc:mysql://localhost:3306/mydb?useTimezone=true&serverTimezone=UTC",  // Changed to mydb
-            "user", "password")) {
+            "jdbc:mysql://localhost:3306/mydb?useTimezone=true&serverTimezone=UTC", 
+            "root", "your_password")) {
 
             // Insert performance data
             PreparedStatement pstmt = conn.prepareStatement(
@@ -239,7 +257,7 @@ public class athlete_management {
             pstmt.setString(1, performanceID);
             pstmt.setString(2, athleteID);
             pstmt.setString(3, date);
-            pstmt.setInt(4, score);  // Changed to int
+            pstmt.setInt(4, score);
             pstmt.executeUpdate();
 
             return 1;
@@ -252,15 +270,26 @@ public class athlete_management {
     // Update performance data
     public int update_performance() {
         try (Connection conn = DriverManager.getConnection(
-            "jdbc:mysql://localhost:3306/mydb?useTimezone=true&serverTimezone=UTC",  // Changed to mydb
-            "user", "password")) {
+            "jdbc:mysql://localhost:3306/mydb?useTimezone=true&serverTimezone=UTC", 
+            "root", "your_password")) {
+
+            // Check if performance exists
+            PreparedStatement checkStmt = conn.prepareStatement(
+                "SELECT * FROM performance WHERE performanceID=?"
+            );
+            checkStmt.setString(1, performanceID);
+            ResultSet rs = checkStmt.executeQuery();
+            if (!rs.next()) {
+                System.out.println("Performance with ID " + performanceID + " does not exist.");
+                return 0;
+            }
 
             // Update performance data
             PreparedStatement pstmt = conn.prepareStatement(
                 "UPDATE performance SET date=?, score=? WHERE performanceID=?"
             );
             pstmt.setString(1, date);
-            pstmt.setInt(2, score);  // Changed to int
+            pstmt.setInt(2, score); // score is an integer now
             pstmt.setString(3, performanceID);
             pstmt.executeUpdate();
 
