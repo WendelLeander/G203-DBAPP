@@ -33,13 +33,14 @@ public class athlete_management {
 
     // Add a new athlete along with team data
     public int add_athlete() {
-        try (Connection conn = DriverManager.getConnection(
-            "jdbc:mysql://localhost:3306/mydb?useTimezone=true&serverTimezone=UTC", 
-            "root", "your_password")) {
+        try {
+        	Connection conn = DriverManager.getConnection(
+                    "jdbc:mysql://localhost:3306/mydb?useTimezone=true&serverTimezone=UTC", 
+                    "root", "your_password");
 
             // Insert athlete data
             PreparedStatement pstmt = conn.prepareStatement(
-                "INSERT INTO athletes (athleteID, firstName, lastName, middleInitial, birthday, gender) VALUES (?,?,?,?,?,?)"
+                "INSERT INTO athlete (athleteID, firstName, lastName, middleInitial, birthday, gender) VALUES (?,?,?,?,?,?)"
             );
             pstmt.setString(1, athleteID);
             pstmt.setString(2, firstName);
@@ -67,13 +68,14 @@ public class athlete_management {
 
     // Update existing athlete and team data with conditional updates
     public int update_athlete() {
-        try (Connection conn = DriverManager.getConnection(
-            "jdbc:mysql://localhost:3306/mydb?useTimezone=true&serverTimezone=UTC", 
-            "root", "your_password")) {
+        try {
+        	Connection conn = DriverManager.getConnection(
+                    "jdbc:mysql://localhost:3306/mydb?useTimezone=true&serverTimezone=UTC", 
+                    "root", "your_password");
 
             // Check if athlete exists
             PreparedStatement checkStmt = conn.prepareStatement(
-                "SELECT * FROM athletes WHERE athleteID=?"
+                "SELECT * FROM athlete WHERE athleteID=?"
             );
             checkStmt.setString(1, athleteID);
             ResultSet rs = checkStmt.executeQuery();
@@ -83,7 +85,7 @@ public class athlete_management {
             }
 
             // Update athlete data conditionally
-            StringBuilder updateQuery = new StringBuilder("UPDATE athletes SET ");
+            StringBuilder updateQuery = new StringBuilder("UPDATE athlete SET ");
             boolean first = true;
             if (!firstName.isEmpty()) {
                 updateQuery.append("firstName=?, ");
@@ -166,13 +168,13 @@ public class athlete_management {
 
     // Delete athlete and their associated team data
     public int delete_athlete() {
-        try (Connection conn = DriverManager.getConnection(
-            "jdbc:mysql://localhost:3306/mydb?useTimezone=true&serverTimezone=UTC", 
-            "root", "your_password")) {
-
+        try {
+        	Connection conn = DriverManager.getConnection(
+                    "jdbc:mysql://localhost:3306/mydb?useTimezone=true&serverTimezone=UTC", 
+                    "root", "your_password");
             // Check if athlete exists
             PreparedStatement checkStmt = conn.prepareStatement(
-                "SELECT * FROM athletes WHERE athleteID=?"
+                "SELECT * FROM athlete WHERE athleteID=?"
             );
             checkStmt.setString(1, athleteID);
             ResultSet rs = checkStmt.executeQuery();
@@ -189,7 +191,7 @@ public class athlete_management {
             pstmt.executeUpdate();
 
             // Delete from athletes table
-            pstmt = conn.prepareStatement("DELETE FROM athletes WHERE athleteID=?");
+            pstmt = conn.prepareStatement("DELETE FROM athlete WHERE athleteID=?");
             pstmt.setString(1, athleteID);
             pstmt.executeUpdate();
 
@@ -202,13 +204,13 @@ public class athlete_management {
 
     // View an athlete's details along with their team and performance data
     public int view_athlete() {
-        try (Connection conn = DriverManager.getConnection(
-            "jdbc:mysql://localhost:3306/mydb?useTimezone=true&serverTimezone=UTC", 
-            "root", "your_password")) {
-
+        try {
+        	Connection conn = DriverManager.getConnection(
+                    "jdbc:mysql://localhost:3306/mydb?useTimezone=true&serverTimezone=UTC", 
+                    "root", "your_password");
             // Select athlete data along with team role
             PreparedStatement pstmt = conn.prepareStatement(
-                "SELECT a.*, t.teamID, t.role FROM athletes a JOIN `athlete-team` t ON a.athleteID = t.athleteID WHERE a.athleteID=?"
+                "SELECT a.*, t.teamID, t.role FROM athlete a JOIN `athlete-team` t ON a.athleteID = t.athleteID WHERE a.athleteID=?"
             );
             pstmt.setString(1, athleteID);
             ResultSet rs = pstmt.executeQuery();
@@ -246,10 +248,10 @@ public class athlete_management {
 
     // Add performance for an athlete
     public int add_performance() {
-        try (Connection conn = DriverManager.getConnection(
-            "jdbc:mysql://localhost:3306/mydb?useTimezone=true&serverTimezone=UTC", 
-            "root", "your_password")) {
-
+        try {
+        	Connection conn = DriverManager.getConnection(
+                    "jdbc:mysql://localhost:3306/mydb?useTimezone=true&serverTimezone=UTC", 
+                    "root", "your_password");
             // Insert performance data
             PreparedStatement pstmt = conn.prepareStatement(
                 "INSERT INTO performance (performanceID, athleteID, date, score) VALUES (?,?,?,?)"
@@ -269,10 +271,10 @@ public class athlete_management {
 
     // Update performance data
     public int update_performance() {
-        try (Connection conn = DriverManager.getConnection(
-            "jdbc:mysql://localhost:3306/mydb?useTimezone=true&serverTimezone=UTC", 
-            "root", "your_password")) {
-
+        try {
+        	Connection conn = DriverManager.getConnection(
+                    "jdbc:mysql://localhost:3306/mydb?useTimezone=true&serverTimezone=UTC", 
+                    "root", "your_password");
             // Check if performance exists
             PreparedStatement checkStmt = conn.prepareStatement(
                 "SELECT * FROM performance WHERE performanceID=?"
