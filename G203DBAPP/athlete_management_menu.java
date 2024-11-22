@@ -1,3 +1,4 @@
+// 11-22-2024: 4:33 PM
 package G203DBAPP;
 import java.util.Scanner;
 
@@ -10,7 +11,6 @@ public class athlete_management_menu {
         int menuselection = 0;
         Scanner console = new Scanner(System.in);
 
-        // Simplified Athlete Management Menu
         System.out.println("=======================================================");
         System.out.println("    Athlete Management Menu                           ");
         System.out.println("-------------------------------------------------------");
@@ -18,6 +18,7 @@ public class athlete_management_menu {
         System.out.println("[2] Update an Athlete Record                         ");
         System.out.println("[3] Delete an Athlete Record                         ");
         System.out.println("[4] View an Athlete Record and Current Team          ");
+        System.out.println("[5] View Athlete's Performance History               ");
         System.out.println("[0] Exit Athlete Management                          ");
         System.out.println("=======================================================");
 
@@ -28,7 +29,6 @@ public class athlete_management_menu {
             athlete_management a = new athlete_management();
 
             System.out.println("Enter athlete profile");
-            System.out.println("-------------------------------------------------------------------");
             System.out.print("Athlete ID         : ");
             a.athleteId = console.nextLine();
             System.out.print("First Name         : ");
@@ -53,7 +53,6 @@ public class athlete_management_menu {
                 System.out.println("Athlete does not exist in the records");
             } else {
                 System.out.println("Current Athlete profile");
-                System.out.println("-------------------------------------------------------------------");
                 System.out.println("Athlete ID         : " + a.athleteId);
                 System.out.println("First Name         : " + a.firstName);
                 System.out.println("Last Name          : " + a.lastName);
@@ -61,7 +60,6 @@ public class athlete_management_menu {
                 System.out.println("Gender             : " + a.gender);
 
                 System.out.println("\nEnter updated athlete profile");
-                System.out.println("-------------------------------------------------------------------");
                 System.out.print("First Name         : ");
                 a.firstName = console.nextLine();
                 System.out.print("Last Name          : ");
@@ -92,20 +90,21 @@ public class athlete_management_menu {
             if (a.view_athlete() == 0) {
                 System.out.println("Athlete does not exist in the records");
             } else {
-                // Displaying the retrieved athlete information
                 System.out.println("Athlete Information:");
                 System.out.println("ID: " + a.athleteId);
                 System.out.println("Name: " + a.firstName + " " + a.lastName);
                 System.out.println("Birthday: " + a.birthday);
                 System.out.println("Gender: " + a.gender);
-                
-                // Showing the current team information
-                if (a.teamName != null) {
-                    System.out.println("Current Team: " + a.teamName);
-                } else {
-                    System.out.println("No current team assigned.");
-                }
+                System.out.println("Current Team: " + a.teamName);
             }
+        } else if (menuselection == 5) {
+            athlete_management a = new athlete_management();
+
+            System.out.println("Enter athlete profile");
+            System.out.print("Athlete ID         : ");
+            a.athleteId = console.nextLine();
+
+            a.view_performance_history();
         }
 
         return menuselection;
