@@ -41,8 +41,8 @@ public class team {
 
     public int addteam() {
         try {
-            Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/dbathletes?useTimezone=true&serverTimezone=UTC&user=root&password=1123Jeru");
-            PreparedStatement pstmt = conn.prepareStatement("INSERT INTO teams (teamID, teamName, sport) VALUES (?, ?, ?, ?, ?)");
+            Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/dbathletes?useTimezone=true&serverTimezone=UTC&user=root&password=1123_Jeru");
+            PreparedStatement pstmt = conn.prepareStatement("INSERT INTO teams (teamID, teamName, sport) VALUES (?, ?, ?)");
             pstmt.setString(1, teamId);
             pstmt.setString(2, teamName);
             pstmt.setString(3, sport);
@@ -59,11 +59,13 @@ public class team {
 
     public int update_team() {
         try {
-            Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/dbathletes?useTimezone=true&serverTimezone=UTC&user=root&password=1123Jeru");
+            Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/dbathletes?useTimezone=true&serverTimezone=UTC&user=root&password=1123_Jeru");
             PreparedStatement pstmt = conn.prepareStatement("UPDATE athletes SET teamName=?, sport=? WHERE teamID=?");
-            pstmt.setString(1, teamId);
-            pstmt.setString(2, teamName);
-            pstmt.setString(3, sport);
+            
+            pstmt.setString(1, teamName);
+            pstmt.setString(2, sport);
+            pstmt.setString(3, teamId);
+            
             pstmt.executeUpdate();
             System.out.println("team record was updated");
             pstmt.close();
@@ -77,7 +79,7 @@ public class team {
 
     public int delete_team() {
         try {
-            Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/dbathletes?useTimezone=true&serverTimezone=UTC&user=root&password=1123Jeru");
+            Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/dbathletes?useTimezone=true&serverTimezone=UTC&user=root&password=1123_Jeru");
             PreparedStatement pstmt = conn.prepareStatement("DELETE FROM teams WHERE teamID=?");
             pstmt.setString(1, teamId);
             pstmt.executeUpdate();
@@ -93,7 +95,7 @@ public class team {
 
     public int view_Team() {
         try {
-            Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/dbathletes?useTimezone=true&serverTimezone=UTC&user=root&password=1123Jeru");
+            Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/dbathletes?useTimezone=true&serverTimezone=UTC&user=root&password=1123_Jeru");
             PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM teams WHERE teamID=?");
             pstmt.setString(1, teamId);
             ResultSet rs = pstmt.executeQuery();
@@ -137,7 +139,7 @@ public class team {
     }
     public int teamPerformanceHistory() {
     	try {
-	    	Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/dbathletes?useTimezone=true&serverTimezone=UTC&user=root&password=1123Jeru");
+	    	Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/dbathletes?useTimezone=true&serverTimezone=UTC&user=root&password=1123_Jeru");
 	        PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM Match_History WHERE teamID1=? OR teamID2=?");
 	        pstmt.setString(1, teamId);
 	        pstmt.setString(2, teamId);
@@ -162,6 +164,8 @@ public class team {
                 System.out.println("Team2: " + team2N );
                 System.out.println("Team1 Score: " + team1S);
                 System.out.println("Team2 Score: " + team2S);
+                pstmt.close();
+                conn.close();
 	        	}
 	        return 1;
     		}
@@ -176,7 +180,7 @@ public class team {
     
     }
     public boolean checkTeamIdExists(String teamId) {
-        try {Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/dbathletes?useTimezone=true&serverTimezone=UTC&user=root&password=1123Jeru");
+        try {Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/dbathletes?useTimezone=true&serverTimezone=UTC&user=root&password=1123_Jeru");
              PreparedStatement stmt = conn.prepareStatement("SELECT COUNT(*) FROM teams WHERE teamID = ?");
             stmt.setString(1, teamId);
             ResultSet rs = stmt.executeQuery();

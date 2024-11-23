@@ -10,14 +10,14 @@ public class team_menu {
 
         while (menuSelection != 0) {
             System.out.println("============================================");
-            System.out.println("Athlete Management Menu");
+            System.out.println("Team Management Menu");
             System.out.println("============================================");
-            System.out.println("[1] Create a new Athlete Record");
-            System.out.println("[2] Update an Athlete Record");
-            System.out.println("[3] Delete an Athlete Record");
-            System.out.println("[4] View an Athlete Record and Current Team");
-            System.out.println("[5] View Athlete's Performance History");
-            System.out.println("[0] Exit Athlete Management");
+            System.out.println("[1] Create a new Team Record");
+            System.out.println("[2] Update an Team Record");
+            System.out.println("[3] Delete an Team Record");
+            System.out.println("[4] View an Team Record and Current Team");
+            System.out.println("[5] View Team's Performance History");
+            System.out.println("[0] Exit Team Management");
             System.out.println("============================================");
             System.out.print("Enter your choice: ");
             menuSelection = Integer.parseInt(console.nextLine());
@@ -27,23 +27,27 @@ public class team_menu {
             switch (menuSelection) {
                 case 1:
                     // Create a new team Record
-                    System.out.print("Enter Athlete ID: ");
+                    System.out.print("Enter Team ID: ");
                     am.teamId = console.nextLine();
-                    //if (am.checkTeamIdExists())
+                    if (am.checkTeamIdExists(am.teamId)) {
                     System.out.print("Enter team Name: ");
                     am.teamName = console.nextLine();
                     System.out.print("Enter team sport: ");
                     am.sport = console.nextLine();
                     if (am.addteam() == 1) {
-                        System.out.println("Athlete added successfully!");
+                        System.out.println("Team added successfully!");
                     } else {
-                        System.out.println("Failed to add athlete.");
+                        System.out.println("Failed to add Team.");
                     }
+                    } else {
+                    	System.out.println("Team already exists");
+                    }
+                   
                     break;
 
                 case 2:
                     // Update a team Record
-                    System.out.print("Enter Athlete ID to update: ");
+                    System.out.print("Enter Team ID to update: ");
                     am.teamId = console.nextLine();
                     
                     // Ask user for updates
@@ -74,30 +78,30 @@ public class team_menu {
                     if (am.update_team() == 1) {
                         System.out.println("Team updated successfully!");
                     } else {
-                        System.out.println("Failed to update athlete.");
+                        System.out.println("Failed to update Team.");
                     }
                     break;
 
                 case 3:
-                    // Delete an Athlete Record
+                    // Delete an Team Record
                     System.out.print("Enter Team ID to delete: ");
                     am.teamId = console.nextLine();
                     if (am.delete_team() == 1) {
-                        System.out.println("Athlete deleted successfully!");
+                        System.out.println("Team deleted successfully!");
                     } else {
-                        System.out.println("Failed to delete athlete.");
+                        System.out.println("Failed to delete Team.");
                     }
                     break;
 
                 case 4:
-                    // View an Athlete Record and Current Team
+                    // View an Team Record and Current Team
                     System.out.print("Enter Team ID to view: ");
                     am.teamId = console.nextLine();
                     am.view_Team();
                     break;
 
                 case 5:
-                    // View Athlete's Performance History
+                    // View Team's Performance History
                     System.out.print("Enter Team ID to view performance history: ");
                     am.teamId = console.nextLine();
                     // Call the method and check if it returns a result
