@@ -2,10 +2,58 @@ package G203DBAPP;
 
 import java.io.*;
 import java.util.Scanner;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.sql.*;
 
 public class athlete_management_menu {
 
     public athlete_management_menu() {
+    }
+
+    // Utility method to validate the date format (YYYY-MM-DD)
+    public static boolean isValidDate(String date) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        sdf.setLenient(false);
+        try {
+            sdf.parse(date);
+            return true; // date is valid
+        } catch (ParseException e) {
+            return false; // invalid date
+        }
+    }
+
+    // Utility method to validate gender input (M or F)
+    public static boolean isValidGender(String gender) {
+        return gender.equalsIgnoreCase("M") || gender.equalsIgnoreCase("F");
+    }
+
+    // Utility method to check if an input string is a valid integer
+    public static boolean isValidInteger(String input) {
+        try {
+            Integer.parseInt(input);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+
+    // Method to check if the athlete ID already exists in the database
+    public static boolean isAthleteIDExists(String athleteID) {
+        try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/mydb?useTimezone=true&serverTimezone=UTC&user=root&password=your_password")) {
+            String query = "SELECT COUNT(*) FROM athlete WHERE athleteID = ?";
+            try (PreparedStatement pstmt = conn.prepareStatement(query)) {
+                pstmt.setString(1, athleteID);
+                try (ResultSet rs = pstmt.executeQuery()) {
+                    if (rs.next()) {
+                        return rs.getInt(1) > 0; // Returns true if the athleteID exists
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Error checking athlete ID: " + e.getMessage());
+        }
+        return false; // Returns false if not found
     }
 
     public int menu() {
@@ -33,13 +81,47 @@ public class athlete_management_menu {
             athlete_management a = new athlete_management();
 
             System.out.println("Enter athlete information");
-            System.out.println("Athlete ID           : "); a.athleteID = console.nextLine();
+            System.out.println("Athlete ID           : "); 
+            String athleteID = console.nextLine();
+
+            // Check if the athleteID already exists
+            if (isAthleteIDExists(athleteID)) {
+                System.out.println("Error: Athlete ID already exists. Please choose a different Athlete ID.");
+                return menuselection; // Exit the method and return to the menu
+            }
+
+            a.athleteID = athleteID; // Only assign if ID doesn't exist
             System.out.println("First Name           : "); a.firstName = console.nextLine();
             System.out.println("Last Name            : "); a.lastName = console.nextLine();
             System.out.println("Middle Initial       : "); a.middleInitial = console.nextLine();
-            System.out.println("Birthday             : "); a.birthday = console.nextLine();
-            System.out.println("Gender               : "); a.gender = console.nextLine();
-            System.out.println("Team Name            : "); a.teamID = console.nextLine(); // Getting team name instead of ID
+            
+            // Validate Birthday (YYYY-MM-DD)
+            String birthday;
+            while (true) {
+                System.out.println("Birthday (YYYY-MM-DD) : ");
+                birthday = console.nextLine();
+                if (isValidDate(birthday)) {
+                    a.birthday = birthday;
+                    break;
+                } else {
+                    System.out.println("Invalid date format. Please use YYYY-MM-DD.");
+                }
+            }
+
+            // Validate Gender (M or F)
+            String gender;
+            while (true) {
+                System.out.println("Gender (M/F)          : ");
+                gender = console.nextLine();
+                if (isValidGender(gender)) {
+                    a.gender = gender;
+                    break;
+                } else {
+                    System.out.println("Invalid input. Gender must be 'M' or 'F'.");
+                }
+            }
+
+            System.out.println("Team ID              : "); a.teamID = console.nextLine(); // Directly getting team ID
             System.out.println("Role in the Team     : "); a.role = console.nextLine();
 
             a.add_athlete();
@@ -51,7 +133,7 @@ public class athlete_management_menu {
             System.out.println("Enter athlete ID to update: ");
             a.athleteID = console.nextLine();
 
-            if (a.view_athlete() == 0) {
+            if (a.view_athlete(a.athleteID) == 0) {  // Pass athleteID to view_athlete method
                 System.out.println("That athlete does not exist in the records.");
             } else {
                 System.out.println("Current Athlete information:");
@@ -62,7 +144,7 @@ public class athlete_management_menu {
                 System.out.println("Middle Initial       : " + a.middleInitial);
                 System.out.println("Birthday             : " + a.birthday);
                 System.out.println("Gender               : " + a.gender);
-                System.out.println("Team ID              : " + a.teamID);
+                System.out.println("Team ID              : " + a.teamID); // Show teamID here
                 System.out.println("Role in Team         : " + a.role);
 
                 System.out.println("Which field do you want to update?");
@@ -71,7 +153,7 @@ public class athlete_management_menu {
                 System.out.println("[3] Middle Initial");
                 System.out.println("[4] Birthday");
                 System.out.println("[5] Gender");
-                System.out.println("[6] Team Name");
+                System.out.println("[6] Team ID");
                 System.out.println("[7] Role in Team");
                 System.out.println("[0] Cancel");
 
@@ -91,16 +173,36 @@ public class athlete_management_menu {
                         a.middleInitial = console.nextLine();
                         break;
                     case 4:
-                        System.out.println("Enter new Birthday: ");
-                        a.birthday = console.nextLine();
+                        // Validate Birthday
+                        String updatedBirthday;
+                        while (true) {
+                            System.out.println("Enter new Birthday (YYYY-MM-DD): ");
+                            updatedBirthday = console.nextLine();
+                            if (isValidDate(updatedBirthday)) {
+                                a.birthday = updatedBirthday;
+                                break;
+                            } else {
+                                System.out.println("Invalid date format. Please use YYYY-MM-DD.");
+                            }
+                        }
                         break;
                     case 5:
-                        System.out.println("Enter new Gender: ");
-                        a.gender = console.nextLine();
+                        // Validate Gender
+                        String updatedGender;
+                        while (true) {
+                            System.out.println("Enter new Gender (M/F): ");
+                            updatedGender = console.nextLine();
+                            if (isValidGender(updatedGender)) {
+                                a.gender = updatedGender;
+                                break;
+                            } else {
+                                System.out.println("Invalid input. Gender must be 'M' or 'F'.");
+                            }
+                        }
                         break;
                     case 6:
-                        System.out.println("Enter new Team Name: ");
-                        a.teamID = console.nextLine(); // Update team name
+                        System.out.println("Enter new Team ID: ");
+                        a.teamID = console.nextLine(); // Update team ID
                         break;
                     case 7:
                         System.out.println("Enter new Role in Team: ");
@@ -134,20 +236,37 @@ public class athlete_management_menu {
             System.out.println("Enter athlete ID to view: ");
             a.athleteID = console.nextLine();
 
-            a.view_athlete(); // Shows athlete details and their team
+            a.view_athlete(a.athleteID); // Pass athleteID to view_athlete method
 
         } else if (menuselection == 5) {
             // View Athlete's Performance History
-        	athlete_peformance_report p = new athlete_peformance_report(); // Corrected class name
+            athlete_peformance_report p = new athlete_peformance_report();
 
             System.out.println("Enter athlete ID to view performance history: ");
-            String athleteID = console.nextLine();
-            System.out.println("Enter Year: ");
-            int year = Integer.parseInt(console.nextLine());
-            System.out.println("Enter Month: ");
-            int month = Integer.parseInt(console.nextLine());
+            String athleteID = console.nextLine().trim();
 
-            p.view_performance(athleteID, "", month, year); // Pass athleteID and other filters as needed
+            // Check if the athlete ID exists in the database
+            if (!isAthleteIDExists(athleteID)) { 
+                System.out.println("Error: Athlete ID does not exist. Please enter a valid Athlete ID.");
+                return menuselection; // Return to the menu
+            }
+
+            System.out.println("Enter Role: ");
+            String role = console.nextLine().trim();
+
+            String date;
+            while (true) {
+                System.out.println("Enter Date (YYYY-MM-DD): ");
+                date = console.nextLine().trim();
+                if (isValidDate(date)) {
+                    break;
+                } else {
+                    System.out.println("Invalid date format. Please use YYYY-MM-DD.");
+                }
+            }
+
+            // View performance report
+            p.view_performance(athleteID, role, date); // Ensure method accepts the role and date parameters
         }
 
         return menuselection;
