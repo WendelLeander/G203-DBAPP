@@ -6,18 +6,23 @@ public class coach_management {
 	public String coachId;
 	public String firstName;
 	public String lastName;
-	public String coachingRole;
-	public String hireDate;
-	public int age;
+	public String middleInitial;
+	public String birthday;
 	public char gender;
+	public String endDate;
+	public String teamID;
+	public String teamName;
+	public String sport;
+	
+
+
 	
 	public coach_management() {
 		coachId			= "";
 		firstName		= "";
 		lastName		= "";
-		coachingRole	= "";
-		hireDate		= "";
-		age				= 0;
+		middleInitial	= "";
+		birthday		= "";
 		gender			= ' ';
 	}
 	
@@ -26,15 +31,14 @@ public class coach_management {
 		try {
 			
 			Connection conn;
-			conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/dbathletes?useTimezone=true&serverTimezone=UTC&user=root&password=p@ssword");
-			PreparedStatement pstmt = conn.prepareStatement("INSERT INTO coaches VALUES (?,?,?,?,?,?,?)");
+			conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/mydb?useTimezone=true&serverTimezone=UTC&user=root&password=p@ssword");
+			PreparedStatement pstmt = conn.prepareStatement("INSERT INTO coach VALUES (?,?,?,?,?,?)");
 			pstmt.setString(1, coachId);
 			pstmt.setString(2, firstName);
 			pstmt.setString(3, lastName);
-			pstmt.setString(4, coachingRole);
-			pstmt.setString(5, hireDate);
-			pstmt.setInt   (6, age);
-			pstmt.setString (7, String.valueOf(gender));
+			pstmt.setString(4, middleInitial);
+			pstmt.setString(5, birthday);
+			pstmt.setString (6, String.valueOf(gender));
 			System.out.println("SQL Statement Prepared");
 			pstmt.executeUpdate();
 			System.out.println("Record was created");
@@ -54,15 +58,14 @@ public class coach_management {
 		try {
 			
 			Connection conn;
-			conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/dbathletes?useTimezone=true&serverTimezone=UTC&user=root&password=p@ssword");
-			PreparedStatement pstmt = conn.prepareStatement("UPDATE coaches SET coachFirstName=?, coachLastName=?, coachingRole=?, hireDate=?, age=?, gender=? WHERE coachID=?");
-			pstmt.setString(7, coachId);
+			conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/mydb?useTimezone=true&serverTimezone=UTC&user=root&password=p@ssword");
+			PreparedStatement pstmt = conn.prepareStatement("UPDATE coach SET firstname=?, lastname=?, middleInitial=?, birthday=?, gender=? WHERE coachID=?");
+			pstmt.setString(6, coachId);
 			pstmt.setString(1, firstName);
 			pstmt.setString(2, lastName);
-			pstmt.setString(3, coachingRole);
-			pstmt.setString(4, hireDate);
-			pstmt.setInt   (5, age);
-			pstmt.setString (6, String.valueOf(gender));
+			pstmt.setString(3, middleInitial);
+			pstmt.setString(4, birthday);
+			pstmt.setString (5, String.valueOf(gender));
 			System.out.println("SQL Statement Prepared");
 			pstmt.executeUpdate();
 			System.out.println("Record was updated");
@@ -82,8 +85,8 @@ public class coach_management {
 		try {
 			
 			Connection conn;
-			conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/dbathletes?useTimezone=true&serverTimezone=UTC&user=root&password=p@ssword");
-			PreparedStatement pstmt = conn.prepareStatement("DELETE FROM coaches WHERE coachID=?");
+			conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/mydb?useTimezone=true&serverTimezone=UTC&user=root&password=p@ssword");
+			PreparedStatement pstmt = conn.prepareStatement("DELETE FROM coach WHERE coachID=?");
 			pstmt.setString(1, coachId);
 			System.out.println("SQL Statement Prepared");
 			pstmt.executeUpdate();
@@ -102,26 +105,71 @@ public class coach_management {
 		int recordcount = 0;
 		try {
 			Connection conn;
-			conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/dbathletes?useTimezone=true&serverTimezone=UTC&user=root&password=p@ssword");
+			conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/mydb?useTimezone=true&serverTimezone=UTC&user=root&password=p@ssword");
 			System.out.println("Connection to DB Successful");
-			PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM coaches WHERE coachID=?");
+			PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM coach WHERE coachID=?");
 			pstmt.setString(1, coachId);
 			System.out.println("SQL Statement Prepared");
 			ResultSet rs = pstmt.executeQuery();
 			while (rs.next()) {
 				recordcount++;
-				firstName 	       = rs.getString("coachFirstName");
-				lastName 	       = rs.getString("coachLastName");
-				age 	   		   = rs.getInt("age");
+				firstName 	       = rs.getString("firstname");
+				lastName 	       = rs.getString("lastname");
+				middleInitial 	   = rs.getString("middleInitial");
+				birthday           = rs.getString("birthday");
 				gender	  		   = rs.getString("gender").charAt(0);
-				coachingRole       = rs.getString("coachingRole");
-				hireDate	       = rs.getString("hireDate");
+				
+				
 
 				System.out.println("Record was Retrieved");
 			}
 			pstmt.close();
 			conn.close();
 			return recordcount;
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			return 0;
+		}
+	}
+	
+public void get_team() {
+		try {
+			
+			Connection conn;
+			conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/mydb?useTimezone=true&serverTimezone=UTC&user=root&password=p@ssword");
+			PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM coach_job_history WHERE coachID=? AND YEAR(endDate) = 9999");
+			pstmt.setString(1, coachId);
+			ResultSet rs = pstmt.executeQuery();
+			while (rs.next()) {
+				teamID 	       = rs.getString("teamID");			
+			}
+			pstmt.close();
+			conn.close();
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+	}
+public int view_current_team() {
+		int recordcount = 0;
+		try {
+			this.get_team();
+			Connection conn;
+			conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/mydb?useTimezone=true&serverTimezone=UTC&user=root&password=p@ssword");
+			PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM teams WHERE teamID=?");
+			pstmt.setString(1, teamID);
+			System.out.println("SQL Statement Prepared");
+			ResultSet rs = pstmt.executeQuery();
+			while (rs.next()) {
+				recordcount++;
+				teamName 	       = rs.getString("teamName");
+				sport 	      	   = rs.getString("sport");
+				
+				System.out.println("Record was Retrieved");
+			}
+			pstmt.close();
+			conn.close();
+			return recordcount;
+			
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 			return 0;

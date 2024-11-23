@@ -19,7 +19,8 @@ public coach_management_menu() {
 		System.out.println("[1] Create a new Coach Record						   ");
 		System.out.println("[2] Update a Coach Record							   ");
 		System.out.println("[3] Delete a Coach Record							   ");
-		System.out.println("[4] View a Coach Record							   ");
+		System.out.println("[4] View a Coach Record							       ");
+		System.out.println("[5] View the current team of a Coach				   ");
 		System.out.println("[0] Exit Coach Management							   ");
 		System.out.println("=======================================================");
 		
@@ -35,13 +36,15 @@ public coach_management_menu() {
 			System.out.println ("Coach ID            : ");  c.coachId  		     = console.nextLine();
 			System.out.println ("First Name          : ");  c.firstName 		 = console.nextLine();
 			System.out.println ("Last Name           : ");  c.lastName  	     = console.nextLine();
-			System.out.println ("Age                 : ");  c.age          		 = Integer.parseInt(console.nextLine());
+			System.out.println ("Middle Initial      : ");  c.middleInitial      = console.nextLine();
 			System.out.println ("Gender              : ");  c.gender	    	 = console.nextLine().charAt(0);
-			System.out.println ("Coaching Role       : ");  c.coachingRole 		 = console.nextLine();
-			System.out.println ("Hire Date           : ");  c.hireDate 			 = console.nextLine();
+			System.out.println ("Birthday            : ");  c.birthday 		     = console.nextLine();
+			
 
 			c.add_coach();
-		
+			coach_job_history_menu ch = new coach_job_history_menu(c.coachId);
+			ch.menu();
+			
 		} else if (menuselection==2) {			
 			
 			coach_management c = new coach_management();
@@ -57,19 +60,18 @@ public coach_management_menu() {
 				System.out.println ("Coach ID            : " + c.coachId);
 				System.out.println ("First Name          : " + c.firstName);
 				System.out.println ("Last Name           : " + c.lastName);
-				System.out.println ("Age                 : " + c.age);
+				System.out.println ("Middle Initial      : " + c.middleInitial);
 				System.out.println ("Gender              : " + c.gender);
-				System.out.println ("Coaching Role       : " + c.coachingRole);
-				System.out.println ("Hire Date           : " + c.hireDate);
+				System.out.println ("Birthday            : " + c.birthday);
+
 	
 				System.out.println ("\nEnter updated coach profile");
 				System.out.println ("-------------------------------------------------------------------");
 				System.out.println ("First Name          : ");  c.firstName 		 = console.nextLine();
 				System.out.println ("Last Name           : ");  c.lastName  	     = console.nextLine();
-				System.out.println ("Age                 : ");  c.age          		 = Integer.parseInt(console.nextLine());
+				System.out.println ("Middle Initial      : ");  c.middleInitial      = console.nextLine();
 				System.out.println ("Gender              : ");  c.gender	    	 = console.nextLine().charAt(0);
-				System.out.println ("Coaching Role       : ");  c.coachingRole 		 = console.nextLine();
-				System.out.println ("Hire Date           : ");  c.hireDate 			 = console.nextLine();		
+				System.out.println ("Birthday            : ");  c.birthday 		     = console.nextLine();	
 			
 				c.update_coach();
 			}
@@ -95,13 +97,27 @@ public coach_management_menu() {
 				System.out.println ("Coach ID            : " + c.coachId);
 				System.out.println ("First Name          : " + c.firstName);
 				System.out.println ("Last Name           : " + c.lastName);
-				System.out.println ("Age                 : " + c.age);
+				System.out.println ("Middle Initial      : " + c.middleInitial);
 				System.out.println ("Gender              : " + c.gender);
-				System.out.println ("Coaching Role       : " + c.coachingRole);
-				System.out.println ("Hire Date           : " + c.hireDate);
+				System.out.println ("Birthday            : " + c.birthday);
+			}
+			
+		} else if (menuselection==5) {
+			coach_management c = new coach_management();
+			
+			System.out.println ("Enter coach ID");
+			System.out.println ("Coach ID        : ");  c.coachId  		 = console.nextLine();
+			c.get_team();
+			if (c.view_current_team()==0) {
+				System.out.println("Coach does not have a current team");
+			} else {
+				System.out.println ("Current Team");
+				System.out.println ("-------------------------------------------------------------------");
+				System.out.println ("Team Name            : " + c.teamName);
+				System.out.println ("Sport                : " + c.sport);
 			}
 		}
-		
+			
 		return menuselection;
 	}	
 	
