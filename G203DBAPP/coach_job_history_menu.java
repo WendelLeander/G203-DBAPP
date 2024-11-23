@@ -21,4 +21,18 @@ public coach_job_history_menu(String coachID) {
 		System.out.println ("Role                : ");  ch.role 	             = console.nextLine();
 		ch.generate_history();
 	}	
+	
+	public void changeCoachTeam() {
+		Scanner console   	  = new Scanner(System.in);
+		coach_job_history_management ch = new coach_job_history_management(coachId);
+		System.out.println("  ");
+		System.out.println("  ");
+		System.out.println("=======================================================");
+		System.out.println("              Change Coach Team    					   ");
+		System.out.println("=======================================================");
+		System.out.println ("Start Date          : ");  ch.startDate  		     = console.nextLine();
+		System.out.println ("Team ID             : ");  ch.teamID		 		 = console.nextLine();
+		System.out.println ("Role                : ");  ch.role 	             = console.nextLine();
+		ch.change_team();
+	}
 }

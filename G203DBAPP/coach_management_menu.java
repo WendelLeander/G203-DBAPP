@@ -21,6 +21,7 @@ public coach_management_menu() {
 		System.out.println("[3] Delete a Coach Record							   ");
 		System.out.println("[4] View a Coach Record							       ");
 		System.out.println("[5] View the current team of a Coach				   ");
+		System.out.println("[6] Change team and update job history				   ");
 		System.out.println("[0] Exit Coach Management							   ");
 		System.out.println("=======================================================");
 		
@@ -43,7 +44,7 @@ public coach_management_menu() {
 
 			c.add_coach();
 			coach_job_history_menu ch = new coach_job_history_menu(c.coachId);
-			ch.menu();
+			ch.addJobHistory();
 			
 		} else if (menuselection==2) {			
 			
@@ -116,6 +117,13 @@ public coach_management_menu() {
 				System.out.println ("Team Name            : " + c.teamName);
 				System.out.println ("Sport                : " + c.sport);
 			}
+		}else if (menuselection==6) {
+			String coachId;
+			
+			System.out.println ("Enter coach ID");
+			System.out.println ("Coach ID        : ");  coachId  		 = console.nextLine();
+			coach_job_history_menu ch = new coach_job_history_menu(coachId);
+			ch.changeCoachTeam();
 		}
 			
 		return menuselection;
