@@ -39,7 +39,7 @@ public class athlete_management {
         String password = "your_password"; // Your MySQL password
 
         // SQL query to insert new athlete into the database
-        String query = "INSERT INTO athlete (athleteID, firstName, lastName, middleInitial, birthday, gender, teamID, role) "
+        String query = "INSERT INTO athletes (athleteID, firstName, lastName, middleInitial, birthday, gender, teamID, role) "
                      + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection conn = DriverManager.getConnection(url, user, password);
@@ -77,7 +77,7 @@ public class athlete_management {
 
             // Check if athlete exists
             PreparedStatement checkStmt = conn.prepareStatement(
-                "SELECT * FROM athlete WHERE athleteID=?"
+                "SELECT * FROM athletes WHERE athleteID=?"
             );
             checkStmt.setString(1, athleteID);
             ResultSet rs = checkStmt.executeQuery();
@@ -87,7 +87,7 @@ public class athlete_management {
             }
 
             // Update athlete data conditionally
-            StringBuilder updateQuery = new StringBuilder("UPDATE athlete SET ");
+            StringBuilder updateQuery = new StringBuilder("UPDATE athletes SET ");
             boolean first = true;
             if (!firstName.isEmpty()) {
                 updateQuery.append("firstName=?, ");
@@ -158,7 +158,7 @@ public class athlete_management {
 
     	    // Check if athlete exists
     	    PreparedStatement checkStmt = conn.prepareStatement(
-    	        "SELECT * FROM athlete WHERE athleteID=?"
+    	        "SELECT * FROM athletes WHERE athleteID=?"
     	    );
     	    checkStmt.setString(1, athleteID);
     	    ResultSet rs = checkStmt.executeQuery();
@@ -177,7 +177,7 @@ public class athlete_management {
 
     	    // Delete the athlete from the athlete table
     	    PreparedStatement deleteAthleteStmt = conn.prepareStatement(
-    	        "DELETE FROM athlete WHERE athleteID=?"
+    	        "DELETE FROM athletes WHERE athleteID=?"
     	    );
     	    deleteAthleteStmt.setString(1, athleteID);
     	    deleteAthleteStmt.executeUpdate();
@@ -200,7 +200,7 @@ public class athlete_management {
 
             // Check if athlete exists
             PreparedStatement checkStmt = conn.prepareStatement(
-                "SELECT * FROM athlete WHERE athleteID=?"
+                "SELECT * FROM athletes WHERE athleteID=?"
             );
             checkStmt.setString(1, athleteID);
             ResultSet rs = checkStmt.executeQuery();
