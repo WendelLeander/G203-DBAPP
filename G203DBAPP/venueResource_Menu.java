@@ -135,25 +135,102 @@ public class venueResource_Menu {
                 	// Create a new Equipment Reservation Record
                     System.out.print("Reservation  ID: ");
                     am.borrowID = console.nextLine();
-                    checker = am.checkreserveIdExists(am.borrowID);
+                    checker = am.checkborrowIdExists(am.borrowID);
                     if (checker != true) {
-                    System.out.print("ResourceID: ");
-                    am.date = console.nextLine();
-                    System.out.print("Enter team Venue ID: ");
-                    am.venueID = console.nextLine();
-                    System.out.print("Enter Start Time: ");
-                    am.startTime = console.nextInt();
-                    System.out.print("Enter End Time: ");
-                    am.endTime = console.nextInt();
-                    System.out.print("Enter Coach ID: ");
-                    am.coachID = console.nextLine();
-                    if (am.createReservation() == 1) {
-                        System.out.println("Reservation added successfully!");
-                    } else {
-                        System.out.println("Failed to add Team.");
-                    }
+                    	System.out.print("Enter Date (YYYY-MM-DD): ");
+                        am.date = console.nextLine();
+                        System.out.print("Enter resource ID: ");
+                        am.resourceID = console.nextLine();
+                        System.out.print("Enter Start Time: ");
+                        am.startTime = console.nextInt();
+                        System.out.print("Enter End Time: ");
+                        am.endTime = console.nextInt();
+                        System.out.print("Enter Coach ID: ");
+                        am.coachID = console.nextLine();
+	                    if (am.createReservation() == 1) {
+	                        System.out.println("Reservation added successfully!");
+	                    } else {
+	                        System.out.println("Failed to add Team.");
+	                    }
                     } else {
                     	System.out.println("Reservation already exists");
+                    }
+                    break;
+                    
+                case 6:
+                	//Update equipment borrow
+                	System.out.print("Enter reserve ID to update: ");
+                    am.borrowID = console.nextLine();
+                    checker = am.checkborrowIdExists(am.borrowID);
+                    if (checker == true) {
+                    // Ask user for updates
+                    	System.out.print("Update date of reservation (current: " + am.date + ")? (Leave blank to skip): ");
+                    	String date = console.nextLine();
+                    	if (!date.isEmpty()) {
+                        am.date = date;
+                    	}
+
+                    	System.out.print("Update venueID (current: " + am.resourceID + ")? (Leave blank to skip): ");
+                    	String resourceID= console.nextLine();
+                    	if (!resourceID.isEmpty()) {
+                        am.resourceID = resourceID;
+                    	}
+	                    System.out.print("Update startTime (current: " + am.startTime + ")? (Leave blank to skip): ");
+	                    int startTime = console.nextInt();
+	                    if (!(startTime == 0)) {
+	                        am.startTime = startTime;
+	                    }
+	                    System.out.print("Update endTime (current: " + am.endTime + ")? (Leave blank to skip): ");
+	                    int endTime = console.nextInt();
+	                    if (!(endTime == 0)) {
+	                        am.endTime = endTime;
+	                    }
+	                    System.out.print("Update coachID (current: " + am.coachID + ")? (Leave blank to skip): ");
+	                    String coachID = console.nextLine();
+	                    if (!coachID.isEmpty()) {
+	                        am.coachID = coachID;
+	                    }
+
+                   
+
+	                    if (am.updateReservation() == 1) {
+	                        System.out.println("Team updated successfully!");
+	                    } else {
+	                        System.out.println("Failed to update Team.");
+	                    }
+                    }
+	                    
+	                    else {
+	                    	System.out.println("Reserve ID does not exist");
+	                    }
+                	
+                	break;
+                	
+                case 7:
+                	System.out.print("Enter Reservation ID to delete: ");
+                    am.borrowID = console.nextLine();
+                    checker = am.checkborrowIdExists(am.borrowID);
+                    if (checker == true) {
+	                    if (am.deleteEquipmentBorrow() == 1) {
+	                        System.out.println("Reservation deleted successfully!");
+	                    } else {
+	                        System.out.println("Failed to delete Team.");
+	                    }
+                    }
+                    else {
+                    	System.out.println("Reserve ID does not exist");
+                    }
+                	
+                	break;
+                	
+                case 8:
+                	System.out.print("Enter Equipment reservation ID to view: ");
+                    am.borrowID = console.nextLine();
+                    checker = am.checkborrowIdExists(am.borrowID);
+                    if (checker == true) {
+                    am.viewEquipmentBorrow();
+                    }else {
+                    	System.out.println("Reservation ID does not exist");
                     }
                     break;
 

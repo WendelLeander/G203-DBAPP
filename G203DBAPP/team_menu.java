@@ -7,7 +7,7 @@ public class team_menu {
     public static void main(String[] args) {
         Scanner console = new Scanner(System.in);
         int menuSelection = 0;
-
+        boolean checker;
         while (menuSelection != 0) {
             System.out.println("============================================");
             System.out.println("Team Management Menu");
@@ -29,7 +29,8 @@ public class team_menu {
                     // Create a new team Record
                     System.out.print("Enter Team ID: ");
                     am.teamId = console.nextLine();
-                    if (am.checkTeamIdExists(am.teamId)) {
+                    checker = am.checkTeamIdExists(am.teamId);
+                    if (checker != true) {
                     System.out.print("Enter team Name: ");
                     am.teamName = console.nextLine();
                     System.out.print("Enter team sport: ");
@@ -50,7 +51,7 @@ public class team_menu {
                     System.out.print("Enter Team ID to update: ");
                     am.teamId = console.nextLine();
                     
-                    // Ask user for updates
+                    if (am.checkTeamIdExists(am.teamId)) {
                     System.out.print("Update Team Name (current: " + am.teamName + ")? (Leave blank to skip): ");
                     String teamName = console.nextLine();
                     if (!teamName.isEmpty()) {
@@ -62,18 +63,18 @@ public class team_menu {
                     if (!sport.isEmpty()) {
                         am.sport = sport;
                     }
-                    System.out.print("Update Team sport (current: " + am.sport + ")? (Leave blank to skip): ");
+                    System.out.print("Update Team games won (current: " + am.gamesWon + ")? (Leave blank to skip): ");
                     int gamesWon = console.nextInt();
-                    if (!sport.isEmpty()) {
+                    if (!(gamesWon == 0)) {
                         am.gamesWon = gamesWon;
                     }
-                    System.out.print("Update Team sport (current: " + am.sport + ")? (Leave blank to skip): ");
+                    System.out.print("Update Team games lost (current: " + am.gamesLost + ")? (Leave blank to skip): ");
                     int gamesLost = console.nextInt();
-                    if (!sport.isEmpty()) {
+                    if (!(gamesLost == 0)) {
                         am.gamesLost = gamesLost;
                     }
 
-                    
+                    }
 
                     if (am.update_team() == 1) {
                         System.out.println("Team updated successfully!");
@@ -86,10 +87,14 @@ public class team_menu {
                     // Delete an Team Record
                     System.out.print("Enter Team ID to delete: ");
                     am.teamId = console.nextLine();
+                    if (am.checkTeamIdExists(am.teamId)) {
                     if (am.delete_team() == 1) {
                         System.out.println("Team deleted successfully!");
                     } else {
                         System.out.println("Failed to delete Team.");
+                    }
+                    } else {
+                    	System.out.println("Team ID does not exist");
                     }
                     break;
 
@@ -97,19 +102,29 @@ public class team_menu {
                     // View an Team Record and Current Team
                     System.out.print("Enter Team ID to view: ");
                     am.teamId = console.nextLine();
+                    checker = am.checkTeamIdExists(am.teamId);
+                    if (checker != true) {
                     am.view_Team();
+                    }else {
+                    	System.out.println("Team ID does not exist");
+                    }
                     break;
 
                 case 5:
                     // View Team's Performance History
                     System.out.print("Enter Team ID to view performance history: ");
                     am.teamId = console.nextLine();
+                    checker = am.checkTeamIdExists(am.teamId);
+                    if (checker != true) {
                     // Call the method and check if it returns a result
                     int result = am.teamPerformanceHistory();
                     if (result == 1) {
                         System.out.println("Performance history viewed successfully!");
                     } else {
                         System.out.println("Failed to view performance history.");
+                    }
+                    }else {
+                    	System.out.println("Team ID does not exist");
                     }
                     break;
 
